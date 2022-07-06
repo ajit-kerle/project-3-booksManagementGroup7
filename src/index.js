@@ -14,7 +14,6 @@ mongoose
       useNewUrlParser: true,
     }
   )
-
   .then(() => console.log("MongoDB is Connected."))
   .catch((err) => console.log(err));
 
