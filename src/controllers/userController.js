@@ -1,3 +1,4 @@
+const jwt = require('jsonwebtoken')
 const userModel=require('../models/userModel')
 const { isValidObject, isValid, validTitle, validPassword } = require('../validators/validator')
 
@@ -56,10 +57,7 @@ const createUser=async function(req,res){
         return res.status(400).send({status:false,message:"Address must be in object form street, city, pincode"}) 
        }
        }
-       
-
-       
-        
+         
        let savedUser=await userModel.create(userData)
        res.status(201).send({status:true,message:"Success",data:savedUser})
     } 
@@ -68,4 +66,35 @@ const createUser=async function(req,res){
     }
 }
 
-module.exports.createUser=createUser
+//<<<<<<<<<<<<<<<<<<<<<<=============================Login User==========================>>>>>>>>>>>>>>>>>>>>>>>>>>>
+
+const loginUser = async function(req,res){
+   try{
+      let email = req.body.email;
+      let password = req.body.password
+
+      if(Object.keys(req.body).length == 0) return res.status().send({status: false, message: "No information passed"});
+
+      if(!(email && password)) return res.status(400).send({status: false, message: "Email-Id and Password must be provided...!"});
+
+      if(!email.match(/^\w+@[a-zA-Z_]+?\.[a-zA-Z]{2,3}$/)) res.status(400).send({status: false, message: "Wrong email format"});
+
+      let user = await userModel.findOne({email: email, password: password});
+
+      if(!user) return res.status(401).send({status: false, message: " Email or Password wrong"});
+
+      let token = jwt.sign(
+         {
+             userId: user._id.toString()
+         },
+         "Group7"
+     );
+
+     return res.status(200).send({ status: true, data: {token : token}});
+
+   }catch(err){
+      res.status(500).send({status: false, message: err.message})
+   }
+}
+
+module.exports={createUser, loginUser}
