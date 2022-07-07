@@ -102,9 +102,9 @@ const getBooksById=async function(req,res){
 
         if(bookId){
             if(mongoose.Types.ObjectId.isValid(bookId)){
-               const getBookData=await bookModel.findById(bookId,{deletedAt:0,ISBN:0})
+               const getBookData=await bookModel.findOne({bookId:bookId,isDeleted:false},{deletedAt:0,ISBN:0})
                if(getBookData){
-                 const getReviewData=await reviewModel.find({bookId:getBookData._id},{isDeleted:0,__V:true})
+                 let getReviewData=await reviewModel.find({bookId:getBookData._id},{isDeleted:0})
                  if(getReviewData){
                    const getBook={getBookData,getReviewData} 
                    res.status(200).send({ status: true, message: 'Books list', data:getBook })
