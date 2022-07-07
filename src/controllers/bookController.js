@@ -93,17 +93,26 @@ const getBooks = async function (req, res) {
     }
 }
 
-const updateBookById = async function (req, res) {
-    try{
+//<<<<<<<<<<<<<=================Delete books by bookId============>>>>>>>>>>>>>>>>>>>>
 
-    }
-    catch(error){
-        return res.status(500).send({status:false, message:error.message})
+const deleteBooks = async function (req, res) {
+    try {
+        let bookId = req.params.bookId;
+        if (!mongoose.Types.ObjectId.isValid(bookId)) {
+            return res.status(400).send({ status: false, message: "Incorrect BookId format" });
+        }
+        let book = await bookModel.findById(bookId)
+        if (!book) {
+            return res.status(404).send({ status: false, message: "book not found" })
+        }
+        if (book.isDeleted == true) {
+            return res.status(400).send({ status: false, message: "Book doesn't exist" })
+        }
+        await bookModel.findByIdAndUpdate({ _id: bookId }, { $set: { isDeleted: true } }, { new: true })
+        res.status(200).send({ status: true, message: "success" })
+    } catch (err) {
+        res.status(500).send({ status: false, message: err.message })
     }
 }
 
-module.exports = {
-    createBook,
-    getBooks,
-    updateBookById
-}
+module.exports = { createBook, getBooks, deleteBooks }
