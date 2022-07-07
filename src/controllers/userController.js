@@ -73,7 +73,7 @@ const loginUser = async function(req,res){
       let email = req.body.email;
       let password = req.body.password
 
-      if(Object.keys(req.body).length == 0) return res.status().send({status: false, message: "No information passed"});
+      if(Object.keys(req.body).length == 0) return res.status(400).send({status: false, message: "No information passed"});
 
       if(!(email && password)) return res.status(400).send({status: false, message: "Email-Id and Password must be provided...!"});
 
@@ -90,6 +90,7 @@ const loginUser = async function(req,res){
          "Group7"
      );
 
+      // res.setHeader("x-api-key",token)
      return res.status(200).send({ status: true, data: {token : token}});
 
    }catch(err){
