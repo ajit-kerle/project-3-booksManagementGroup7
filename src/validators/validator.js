@@ -1,3 +1,7 @@
+function isValidObject(value){
+    return (Object.keys(value).length>0)
+}
+
 const isValid = (value) => {
     if (typeof value === "undefined" || value === null) return false
     if (typeof value === "string" && value.trim().length === 0) return false;
@@ -5,6 +9,14 @@ const isValid = (value) => {
     else {
         return false
     }
+}
+
+function validTitle(value){
+   if(typeof value === "undefined" || typeof value==="null" || typeof value==="number" ) return false
+   if(typeof value==="string" && value.trim().length===0) return false
+   if(value) value=value.trim()
+   if(value !== "Mr" && value !=="Miss" && value !=="Mrs") return false
+   return true
 }
 
 const isValidArray = (value) => {
@@ -22,4 +34,5 @@ const isValidISBN = (value) => {
     return result
 }
 
-module.exports = { isValid, isValidArray, isValidISBN }
+
+module.exports = { isValid, isValidArray, isValidISBN ,isValidObject,validTitle}
