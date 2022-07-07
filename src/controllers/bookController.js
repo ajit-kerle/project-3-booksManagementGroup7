@@ -62,7 +62,7 @@ const getBooks = async function (req,res){
         let bookDetails = req.query
         if(bookDetails){
             
-        let returnBooks = await bookModel.find({bookDetails, isDelated:false})
+        let returnBooks = await bookModel.findOne({bookDetails, isDelated:false})
 
         //let deletedBooks = await bookModel.find({bookDetails, isDeleted: true})
 
@@ -74,15 +74,16 @@ const getBooks = async function (req,res){
                  let books = {
                     _id: returnBooks._id,
                     title: returnBooks.title,
-                    excerpt: returnBooks.userId,
+                    excerpt: returnBooks.excerpt,
                     category: returnBooks.category,
+
                     reviews: returnBooks.reviews,
                     releasedAt: returnBooks.releasedAt
                  }
 
-                 returnBooks.books = books
+                returnBooks.books = books
 
-                    res.status(200).send({status:true, message:'Books list', data: returnBooks})
+                    res.status(200).send({status:true, message:'Books list', data: books})
                 }
     }else{
     res.status(400).send({status: false, msg: "details required"})
@@ -93,7 +94,29 @@ const getBooks = async function (req,res){
     }
 }
 
+//<<<<<<<<<<<<<=================Delete books by bookId============>>>>>>>>>>>>>>>>>>>>
+
+const deleteBooks = async function(req,res){
+    try{
+        let bookId = req.params.bookId;
+        if (!mongoose.Types.ObjectId.isValid(bookId))   return res.status(400).send({status: false,msg: "Incorrect BookId format"});
+        let book = await bookModel.findById(bookId)
+
+        if(!book) return res.status(404).send({status: false, message: "book is incorrect"})
+
+        if(book.isDeleted == true) return res.status(400).send({status: false, message:"Book doesn't exist"})
+
+        let deleteBook = await bookModel.findByIdAndUpdate({_id: bookId}, { $set: {isDeleted: true}}, {new: true})
+
+        res.status(200).send({status: true, message: "success" })
+
+    }catch(err){
+        res.status(500).send({status: false, msg: err.message})
+    }
+}
+
 module.exports ={ 
     createBook,
-    getBooks
+    getBooks,
+    deleteBooks
 }
