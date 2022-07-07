@@ -2,12 +2,14 @@ function isValidObject(value){
     return (Object.keys(value).length>0)
 }
 
-function isValid(value){
-   if(typeof value === "undefined" || typeof value==="null"  ) return false
-   if(typeof value==="string" && value.trim().length===0) return false
-   return true
+const isValid = (value) => {
+    if (typeof value === "undefined" || value === null) return false
+    if (typeof value === "string" && value.trim().length === 0) return false;
+    if (typeof value === "string") { return true }
+    else {
+        return false
+    }
 }
-
 
 function validTitle(value){
    if(typeof value === "undefined" || typeof value==="null" || typeof value==="number" ) return false
@@ -17,8 +19,20 @@ function validTitle(value){
    return true
 }
 
+const isValidArray = (value) => {
+    if (Array.isArray(value)) {
+        for (let i = 0; i < value.length; i++) {
+            if (value[i].trim().length === 0 || typeof (value[i]) !== "string") { return false }
+        }
+        return true
+    } else { return false }
+}
 
-module.exports.isValidObject=isValidObject
-module.exports.isValid=isValid
-module.exports.validTitle=validTitle
-// module.exports.validPassword=validPassword
+const isValidISBN = (value) => {
+    const regEx = /^\s*\978([0-9]){10}\s*$/
+    const result = regEx.test(value)
+    return result
+}
+
+
+module.exports = { isValid, isValidArray, isValidISBN ,isValidObject,validTitle}
