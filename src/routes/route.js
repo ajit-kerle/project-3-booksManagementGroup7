@@ -7,5 +7,6 @@ const userController=require('../controllers/userController')
 router.post('/register',userController.createUser)
 router.post("/books", bookController.createBook)
 router.get("/books", bookController.getBooks)
+router.get("/books/:bookId", bookController.getBooksById)
 
 module.exports = router
