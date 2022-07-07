@@ -58,10 +58,10 @@ const createUser = async function (req, res) {
             }
          }
          let savedUser = await userModel.create(userData)
-         res.status(201).send({ status: true, message: "Success", data: savedUser })
+         return res.status(201).send({ status: true, message: "Success", data: savedUser })
       }
    } catch (err) {
-      res.status(500).send({ status: false, message: err.message })
+      return res.status(500).send({ status: false, message: err.message })
    }
 }
 
@@ -72,7 +72,7 @@ const loginUser = async function (req, res) {
       let email = req.body.email;
       let password = req.body.password
       if (Object.keys(req.body).length == 0) {
-         return res.status().send({ status: false, message: "No information passed" });
+         return res.status(400).send({ status: false, message: "No information passed" });
       }
       if (!(email && password)) {
          return res.status(400).send({ status: false, message: "Email-Id and Password must be provided...!" });
@@ -88,15 +88,15 @@ const loginUser = async function (req, res) {
          {
             userId: user._id.toString(),
             iat: Date.now(),
-            exp: (iat)+(24*60*60*1000)
+            exp: (iat) + (24 * 60 * 60 * 1000)
          },
          "project/booksManagementGroup7"
       );
       res.status(200).setHeader("x-api-key", token);
-      return res.status(200).send({ status: true, data: { token: token } });
+      return res.status(200).send({ status: true, message: "token will be valid for 24 hrs", data: { token: token } });
 
    } catch (err) {
-      res.status(500).send({ status: false, message: err.message })
+      return res.status(500).send({ status: false, message: err.message })
    }
 }
 

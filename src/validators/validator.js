@@ -39,4 +39,5 @@ const isValidDate = (value) => {
     const result = regEx.test(value)
     return result
 }
+
 module.exports = { isValid, isValidArray, isValidISBN, isValidObject, validTitle, isValidDate }
