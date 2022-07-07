@@ -1,8 +1,10 @@
 const mongoose = require("mongoose")
 const userModel = require("../models/userModel")
 const bookModel = require("../models/bookModel")
+const reviewModel = require("../models/reviewModel")
 const validator = require("../validators/validator")
 const moment = require("moment")
+const { restart } = require("nodemon")
 
 //<<<<<<<<<<<<<<<<<<============================================CREATE BOOKS========================================>>>>>>>>>>>>>>>>>>>
 
@@ -89,6 +91,33 @@ const getBooks = async function (req, res) {
         }
         else {
             res.status(200).send({ status: true, message: 'Books list', data: returnBooks })
+        }
+    } catch (err) {
+        res.status(500).send({ status: false, message: err.message })
+    }
+}
+//<<<<<<<<<<<============= Get Books Details By Book Id ===========>>>>>>>>>>>>
+
+const getBooksById = async function (req, res) {
+    try {
+        let bookId = req.params.bookId
+        if (bookId) {
+            if (mongoose.Types.ObjectId.isValid(bookId)) {
+                let getBookData = await bookModel.findById(bookId)
+                if (getBookData && getBookData.isDeleted == false) {
+                    const getReviewData = await reviewModel.find({ bookId: getBookData._id, isDeleted: false }).select({ isDeleted: 0 })
+                    const { _id, title, excerpt, userId, category, subcategory, isDeleted, reviews, releasedAt, createdAt, updatedAt } = getBookData
+                    const getBookWithReviwe = { _id, title, excerpt, userId, category, subcategory, isDeleted, reviews, releasedAt, createdAt, updatedAt, reviewsData: getReviewData }
+                    res.status(200).send({ status: true, message: 'Books list', data: getBookWithReviwe })
+                }
+                else {
+                    return res.status(404).send({ status: false, message: "Book not found" })
+                }
+            } else {
+                return res.status(400).send({ status: false, message: "Book Id is invalid " })
+            }
+        } else {
+            return res.status(400).send({ status: false, message: "please provide bookId To get Book Details" })
         }
     } catch (err) {
         res.status(500).send({ status: false, message: err.message })
@@ -190,4 +219,5 @@ const deleteBooks = async function (req, res) {
     }
 }
 
-module.exports = { createBook, getBooks, updateBookById, deleteBooks }
+module.exports = { createBook, getBooks, updateBookById, deleteBooks, getBooksById }
+

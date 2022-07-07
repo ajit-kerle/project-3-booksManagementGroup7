@@ -84,11 +84,13 @@ const loginUser = async function (req, res) {
       if (!user) {
          return res.status(401).send({ status: false, message: " Email or Password wrong" });
       }
+      const iat = Date.now()
+      const exp = (iat) + (24 * 60 * 60 * 1000)
       let token = jwt.sign(
          {
             userId: user._id.toString(),
-            iat: Date.now(),
-            exp: (iat) + (24 * 60 * 60 * 1000)
+            iat: iat,
+            exp: exp
          },
          "project/booksManagementGroup7"
       );
