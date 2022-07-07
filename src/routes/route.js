@@ -8,4 +8,6 @@ router.post('/register',userController.createUser)
 router.post("/books", bookController.createBook)
 router.get("/books", bookController.getBooks)
 router.delete("/books/:bookId", bookController.deleteBooks)
+router.post("/login", userController.loginUser)
+
 module.exports = router
