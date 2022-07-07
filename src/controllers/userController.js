@@ -56,10 +56,6 @@ const createUser=async function(req,res){
         return res.status(400).send({status:false,message:"Address must be in object form street, city, pincode"}) 
        }
        }
-       
-
-       
-        
        let savedUser=await userModel.create(userData)
        res.status(201).send({status:true,message:"Success",data:savedUser})
     } 
