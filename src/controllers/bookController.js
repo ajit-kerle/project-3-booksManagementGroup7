@@ -55,4 +55,45 @@ const createBook = async function (req, res) {
     }
 }
 
-module.exports.createBook = createBook
+//<<<<<<<<<<<<<<<<<<============================================GET BOOKS========================================>>>>>>>>>>>>>>>>>>>
+
+const getBooks = async function (req,res){
+    try{
+        let bookDetails = req.query
+        if(bookDetails){
+            
+        let returnBooks = await bookModel.find({bookDetails, isDelated:false})
+
+        //let deletedBooks = await bookModel.find({bookDetails, isDeleted: true})
+
+        //if (deletedBooks) return res.status(400).send({status: false, msg: "books deleted"})
+
+        if(!returnBooks){
+            return res.status(404).send({status: false, msg: " No book available show"})}
+            else{
+                 let books = {
+                    _id: returnBooks._id,
+                    title: returnBooks.title,
+                    excerpt: returnBooks.userId,
+                    category: returnBooks.category,
+                    reviews: returnBooks.reviews,
+                    releasedAt: returnBooks.releasedAt
+                 }
+
+                 returnBooks.books = books
+
+                    res.status(200).send({status:true, message:'Books list', data: returnBooks})
+                }
+    }else{
+    res.status(400).send({status: false, msg: "details required"})
+    }
+
+    }catch(err){
+        res.status(500).send({status: fals, msg:err.message})
+    }
+}
+
+module.exports ={ 
+    createBook,
+    getBooks
+}
