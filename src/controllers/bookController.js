@@ -64,43 +64,49 @@ const createBook = async function (req, res) {
 
 //<<<<<<<<<<<<<<<<<<============================================GET BOOKS========================================>>>>>>>>>>>>>>>>>>>
 
-const getBooks = async function (req,res){
-    try{
-        let bookDetails = req.query
-        if(bookDetails){
-            
-        let returnBooks = await bookModel.find({bookDetails, isDelated:false})
+const getBooks = async function (req, res) {
+    try {
+        if (!Object.keys(req.query)) {
+            return res.status(400).send({ status: false, message: "data is required to filter Book" })
+        }
+        const {userId, category, subcategory} = req.query
+        const filterBook = {isDelated: false}
+        if(userId || userId==""){
+            if(!mongoose.Types.ObjectId.isValid(userId)){
+                return res.status(400).send({ status: false, message: "Invalid userId" })
+            }
+            filterBook["userId"] = userId
+        }
+        if(category){
+            filterBook["category"] = category
+        }
+        if(subcategory){
+            const subcategoryArr = subcategory.trim().split(',').map(subcategory => subcategory.trim())
+            filterBook['subcategory'] = { $all: subcategoryArr }
+        }
+        let returnBooks = await bookModel.find(filterBook)
+        if (!returnBooks) {
+            return res.status(404).send({ status: false, message: " No book available show" })
+        }
+        else {
+            let books = {
+                _id: returnBooks._id,
+                title: returnBooks.title,
+                excerpt: returnBooks.excerpt,
+                category: returnBooks.category,
+                reviews: returnBooks.reviews,
+                releasedAt: returnBooks.releasedAt
+            }
+            returnBooks["books"] = books
+            res.status(200).send({ status: true, message: 'Books list', data: books })
+        }
 
-        //let deletedBooks = await bookModel.find({bookDetails, isDeleted: true})
-
-        //if (deletedBooks) return res.status(400).send({status: false, msg: "books deleted"})
-
-        if(!returnBooks){
-            return res.status(404).send({status: false, msg: " No book available show"})}
-            else{
-                 let books = {
-                    _id: returnBooks._id,
-                    title: returnBooks.title,
-                    excerpt: returnBooks.userId,
-                    category: returnBooks.category,
-                    reviews: returnBooks.reviews,
-                    releasedAt: returnBooks.releasedAt
-                 }
-
-                 returnBooks.books = books
-
-                    res.status(200).send({status:true, message:'Books list', data: returnBooks})
-                }
-    }else{
-    res.status(400).send({status: false, msg: "details required"})
-    }
-
-    }catch(err){
-        res.status(500).send({status: fals, msg:err.message})
+    } catch (err) {
+        res.status(500).send({ status: false, message: err.message })
     }
 }
 
-module.exports ={ 
+module.exports = {
     createBook,
     getBooks
 }
