@@ -2,11 +2,13 @@ const jwt = require('jsonwebtoken')
 const userModel = require('../models/userModel')
 const { isValidObject, isValid, validTitle, validPassword } = require('../validators/validator')
 
-// regex here
-const nameRegex = /^[a-zA-Z\\s]{2,20}$/
+//===========================================================================================
+// regex declaraion
+const nameRegex = /[a-zA-Z]/
 const mobileRegex = /^[6-9]\d{9}$/
 const emailRegex = /^\w+([\.-]?\w+)@\w+([\.-]?\w+)(\.\w{2,3})+$/
 const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*])[\w!@#$%^&*]{8,15}$/
+//===========================================================================================
 
 const createUser = async function (req, res) {
    try {
@@ -78,7 +80,7 @@ const loginUser = async function (req, res) {
          return res.status(400).send({ status: false, message: "Email-Id and Password must be provided...!" });
       }
       if (!email.match(/^\w+@[a-zA-Z_]+?\.[a-zA-Z]{2,3}$/)) {
-         res.status(400).send({ status: false, message: "Wrong email format" });
+         return res.status(400).send({ status: false, message: "Wrong email format" });
       }
       let user = await userModel.findOne({ email: email, password: password });
       if (!user) {
