@@ -20,7 +20,7 @@ const createBook = async function (req, res) {
         if (Object.keys(req.body).length == 0) {
             return res.status(400).send({ status: false, message: "Please enter the data to create book" })
         }
-        if ((title && excerpt && userId && ISBN && category && subcategory && releasedAt)) {
+        if ((title && excerpt && userId && ISBN && category && subcategory )) {
             if (!validator.isValid(title)) {
                 return res.status(400).send({ status: false, message: "Please enter valid title in String" })
             }
@@ -38,6 +38,7 @@ const createBook = async function (req, res) {
             // if(!releasedAtRegex.test(releasedAt)&& isValid(releasedAt) ){
             //     return res.status(40).send({ status: false, message: `ISBN number ${ISBN.trim()} is already present` })
             // }
+
             const findISBN = await bookModel.findOne({ ISBN: ISBN.trim() })
             if (findISBN) {
                 return res.status(409).send({ status: false, message: `ISBN number ${ISBN.trim()} is already present` })
@@ -48,6 +49,7 @@ const createBook = async function (req, res) {
             if (!validator.isValidArray(subcategory)) {
                 return res.status(400).send({ status: false, message: "Please enter valid subcategory in array (string) e.g:['subcategory1']" })
             }
+            
             const bookData = {
                 title: title.trim().toUpperCase(),
                 excerpt: excerpt.trim(),
