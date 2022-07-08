@@ -160,10 +160,10 @@ const updateBookById = async function (req, res) {
                     filterBook["excerpt"] = excerpt.trim()
                 }
                 if (releasedAt) {
-                    if (!validator.isValidDate(releasedAt)) {
+                    if (!validator.isValidDate(releasedAt.trim())) {
                         return res.status(400).send({ status: false, message: "Please Enter valid releaseDate in string and format should be in 'YYYY-MM-DD'" });
                     }
-                    filterBook["releasedAt"] = releasedAt
+                    filterBook["releasedAt"] = releasedAt.trim()
                 }
                 if (ISBN) {
                     if (!validator.isValidISBN(ISBN)) {
