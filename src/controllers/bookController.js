@@ -90,7 +90,7 @@ const getBooks = async function (req, res) {
             return res.status(404).send({ status: false, message: " No book available show" })
         }
         else {
-            res.status(200).send({ status: true, message: 'Books list', data: returnBooks })
+            return res.status(200).send({ status: true, message: 'Books list', data: returnBooks })
         }
     } catch (err) {
         res.status(500).send({ status: false, message: err.message })

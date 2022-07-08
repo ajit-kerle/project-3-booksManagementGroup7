@@ -78,7 +78,7 @@ const loginUser = async function (req, res) {
          return res.status(400).send({ status: false, message: "Email-Id and Password must be provided...!" });
       }
       if (!email.match(/^\w+@[a-zA-Z_]+?\.[a-zA-Z]{2,3}$/)) {
-         res.status(400).send({ status: false, message: "Wrong email format" });
+         return res.status(400).send({ status: false, message: "Wrong email format" });
       }
       let user = await userModel.findOne({ email: email, password: password });
       if (!user) {
