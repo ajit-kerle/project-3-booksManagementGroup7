@@ -15,7 +15,12 @@ const authenticate = function (req, res, next) {
                 }
                 else {
                     req.loginUserId = data.userId
-                    next()
+                    if (data.exp > Date.now()) {
+                        next()
+                    }
+                    else {
+                        return res.status(401).send({ status: false, message: "token has been expired" })
+                    }
                 }
             })
         }
@@ -25,4 +30,6 @@ const authenticate = function (req, res, next) {
     }
 }
 
+
 module.exports.authenticate = authenticate
+
