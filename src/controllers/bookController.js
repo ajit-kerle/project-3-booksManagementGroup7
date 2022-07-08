@@ -4,7 +4,6 @@ const bookModel = require("../models/bookModel")
 const reviewModel = require("../models/reviewModel")
 const validator = require("../validators/validator")
 const moment = require("moment")
-const { restart } = require("nodemon")
 
 const createBook = async function (req, res) {
     try {
@@ -103,15 +102,11 @@ const getBooksById=async function(req,res){
             if(mongoose.Types.ObjectId.isValid(bookId)){
                const getBookData=await bookModel.findOne({_id:bookId,isDeleted:false},{deletedAt:0,ISBN:0,__v:0})
                if(getBookData){
-                 let getReviewData=await reviewModel.find({bookId:getBookData._id},{isDeleted:0})
-                 if(getReviewData){
-                   const getBook={getBookData,getReviewData} 
-                   res.status(200).send({ status: true, message: 'Books list', data:getBook })
-                 }else{
-                   const getBookvR={getBookData} 
-                   res.status(200).send({ status: true, message: 'Books list', data:getBookvR })
+                 let reviewsData=await reviewModel.find({bookId:getBookData._id},{isDeleted:0})
+                 if(reviewsData){
+                  getBookData._doc.reviewsData=reviewsData
+                   returnres.status(200).send({ status: true, message: 'Books list', data:getBookData})
                  }
-                
                }else{
                 return res.status(400).send({ status: false, message: "There no book available to show" })
                }
