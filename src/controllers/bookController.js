@@ -4,7 +4,6 @@ const bookModel = require("../models/bookModel")
 const reviewModel = require("../models/reviewModel")
 const validator = require("../validators/validator")
 const moment = require("moment")
-const { restart } = require("nodemon")
 
 //<<<<<<<<<<<<<<<<<<============================================CREATE BOOKS========================================>>>>>>>>>>>>>>>>>>>
 
@@ -87,7 +86,7 @@ const getBooks = async function (req, res) {
         }
         let returnBooks = await bookModel.find(filterBook).select({ _id: 1, title: 1, excerpt: 1, userId: 1, category: 1, reviews: 1, releasedAt: 1 }).sort({ title: 1 })
         if (Object.keys(returnBooks).length == 0) {
-            return res.status(404).send({ status: false, message: " No book available show" })
+            return res.status(404).send({ status: false, message: " No book available to show" })
         }
         else {
             return res.status(200).send({ status: true, message: 'Books list', data: returnBooks })
@@ -98,22 +97,22 @@ const getBooks = async function (req, res) {
 }
 //<<<<<<<<<<<============= Get Books Details By Book Id ===========>>>>>>>>>>>>
 
-const getBooksById = async function (req, res) {
-    try {
-        let bookId = req.params.bookId
-        if (bookId) {
-            if (mongoose.Types.ObjectId.isValid(bookId)) {
-                let getBookData = await bookModel.findById(bookId)
-                if (getBookData && getBookData.isDeleted == false) {
-                    const getReviewData = await reviewModel.find({ bookId: getBookData._id, isDeleted: false }).select({ isDeleted: 0 })
-                    const { _id, title, excerpt, userId, category, subcategory, isDeleted, reviews, releasedAt, createdAt, updatedAt } = getBookData
-                    const getBookWithReviwe = { _id, title, excerpt, userId, category, subcategory, isDeleted, reviews, releasedAt, createdAt, updatedAt, reviewsData: getReviewData }
-                    res.status(200).send({ status: true, message: 'Books list', data: getBookWithReviwe })
-                }
-                else {
-                    return res.status(404).send({ status: false, message: "Book not found" })
-                }
-            } else {
+const getBooksById=async function(req,res){
+    try{
+        let bookId=req.params.bookId
+        if(bookId){
+            if(mongoose.Types.ObjectId.isValid(bookId)){
+               const getBookData=await bookModel.findOne({_id:bookId,isDeleted:false},{deletedAt:0,ISBN:0,__v:0})
+               if(getBookData){
+                 let reviewsData=await reviewModel.find({bookId:getBookData._id},{isDeleted:0})
+                 if(reviewsData){
+                  getBookData._doc.reviewsData=reviewsData
+                   returnres.status(200).send({ status: true, message: 'Books list', data:getBookData})
+                 }
+               }else{
+                return res.status(400).send({ status: false, message: "There no book available to show" })
+               }
+            }else{
                 return res.status(400).send({ status: false, message: "Book Id is invalid " })
             }
         } else {
