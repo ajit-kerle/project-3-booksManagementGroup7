@@ -139,7 +139,7 @@ const updateBookById = async function (req, res) {
         }
         const bookData = await bookModel.findOne({ _id: bookId, isDeleted: false })
         if (!bookData) {
-            return res.status(404).send("book not found")
+            return res.status(404).send({ status: false, message: "book not found" })
         }
         if (req.loginUserId == bookData.userId) {
             if (Object.keys(req.body).length == 0) {
