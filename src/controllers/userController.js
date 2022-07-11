@@ -14,27 +14,27 @@ const createUser = async function (req, res) {
    try {
       if (!isValidObject(req.body)) {
          res.status(400).send({ status: false, message: "Provide all mandatory user information" })
-      } else {
+      }
+      else {
          let { title, name, phone, email, password, address } = req.body
-         userData = {title, name, phone, email:email , password, address}
+         userData = { title, name, phone, email: email, password, address }
+
          // validation for all fields
          let inValid = ""
-      
          if (!validTitle(title)) inValid = inValid + "title, "
          if (!isValid(name) || !nameRegex.test(name)) inValid = inValid + "name, "
          if (!isValid(phone) || !mobileRegex.test(phone)) inValid = inValid + "phone, "
          if (!isValid(email) || !emailRegex.test(email)) inValid = inValid + "email "
-
          if (!validTitle(title) || !isValid(name) || !nameRegex.test(name) || !isValid(phone) || !mobileRegex.test(phone) || !isValid(email) || !emailRegex.test(email)) {
             return res.status(400).send({ status: false, message: `Pliz provide valid ${inValid}and it is mandatory fields` })
          }
+
          //  checking email or phone number unique or not here 
          let uniqueEmail = await userModel.findOne({ email: email.toLowerCase() })
          let uniquePhone = await userModel.findOne({ phone: phone })
-
-         let duplicate= "" 
+         let duplicate = ""
          if (uniqueEmail) duplicate += "Email,"
-         if (uniquePhone) duplicate+= "Phone "
+         if (uniquePhone) duplicate += "Phone "
          if (uniqueEmail || uniquePhone) {
             return res.status(400).send({ status: false, message: `${duplicate}is already registered here provide unique` })
          }
@@ -45,7 +45,7 @@ const createUser = async function (req, res) {
          }
          //==============================
          if (address) {
-            if (isValidObject(address) ) {
+            if (isValidObject(address)) {
                const { street, city, pincode } = address
                let empStr = ""
                if (!isValid(street)) empStr += "street, "
@@ -54,7 +54,8 @@ const createUser = async function (req, res) {
                if (!isValid(street) || !isValid(city) || !isValidPinCode(pincode)) {
                   return res.status(400).send({ status: false, message: `Address must conatin ${empStr}and valid fields` })
                }
-            } else {
+            }
+            else {
                return res.status(400).send({ status: false, message: "Address must be in object form street, city, pincode" })
             }
          }
