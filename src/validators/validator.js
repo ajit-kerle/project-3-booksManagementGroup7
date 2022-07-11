@@ -29,9 +29,14 @@ const isValidArray = (value) => {
 }
 
 const isValidISBN = (value) => {
-    const regEx = /^\s*\978([0-9]){10}\s*$/
-    const result = regEx.test(value)
-    return result
+    const regEx1 = /^\s*\978([0-9]){10}\s*$/
+    const regEx2 = /^\s*([0-9]){10}\s*$/
+    if(regEx1.test(value) || regEx2.test(value)){
+        return true
+    }
+    else{
+        return false
+    }
 }
 
 const isValidDate = (value) => {
