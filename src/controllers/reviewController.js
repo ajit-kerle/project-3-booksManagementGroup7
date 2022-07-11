@@ -49,4 +49,22 @@ const createReview = async function (req, res) {
     }
 }
 
-module.exports = { createReview }
+//<<<<<<<<<<<<<<<===========Delte Book Review===========>>>>>>>>>>>>>>>>
+const deleteBookReview = async function(req,res){
+    try{
+        let reviewRequest = req.params.reviewId
+        let bookRequest = req.params.bookId
+        if (!mongoose.Types.ObjectId.isValid(reviewRequest)) {
+            return res.status(400).send({ status: false, message: "Incorrect review request " });
+        }
+        if (!mongoose.Types.ObjectId.isValid(bookRequest)){
+            return res.status(400).send({ status: false, message: "Incorrect book request"})
+        }
+
+
+    }catch(err){
+        res.status(500).send({status: false, message: err.message})
+    }
+}
+
+module.exports = { createReview , deleteBookReview}
