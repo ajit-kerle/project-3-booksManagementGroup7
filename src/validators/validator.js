@@ -1,6 +1,3 @@
-
-
-
 function isValidObject(value) {
     return (Object.keys(value).length > 0)
 }
@@ -43,4 +40,16 @@ const isValidDate = (value) => {
     return result
 }
 
-module.exports = { isValid, isValidArray, isValidISBN, isValidObject, validTitle, isValidDate }
+const isValidRating = (value) => {
+    const regEx = /^\s*([1-5]){1}\s*$/
+    const result = regEx.test(value)
+    return result
+}
+
+const isValidPinCode = (value) => {
+    const regEx = /^\s*([0-9]){6}\s*$/
+    const result = regEx.test(value)
+    return result
+}
+
+module.exports = { isValid, isValidArray, isValidISBN, isValidObject, validTitle, isValidDate, isValidRating , isValidPinCode}
