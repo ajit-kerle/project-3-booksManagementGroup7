@@ -16,31 +16,36 @@ const createUser = async function (req, res) {
          res.status(400).send({ status: false, message: "Provide all mandatory user information" })
       } else {
          let { title, name, phone, email, password, address } = req.body
-         userData = {title, name, phone, email:email.toLowerCase() , password, address}
+         userData = {title, name, phone, email:email , password, address}
          // validation for all fields
          let inValid = ""
+      
          if (!validTitle(title)) inValid = inValid + "title, "
          if (!isValid(name) || !nameRegex.test(name)) inValid = inValid + "name, "
          if (!isValid(phone) || !mobileRegex.test(phone)) inValid = inValid + "phone, "
          if (!isValid(email) || !emailRegex.test(email)) inValid = inValid + "email "
-         if (!isValid(title) || !isValid(name) || !nameRegex.test(name) || !isValid(phone) || !mobileRegex.test(phone) || !isValid(email) || !emailRegex.test(email)) {
+
+         if (!validTitle(title) || !isValid(name) || !nameRegex.test(name) || !isValid(phone) || !mobileRegex.test(phone) || !isValid(email) || !emailRegex.test(email)) {
             return res.status(400).send({ status: false, message: `Pliz provide valid ${inValid}and it is mandatory fields` })
          }
+         //  checking email or phone number unique or not here 
+         let uniqueEmail = await userModel.findOne({ email: email.toLowerCase() })
+         let uniquePhone = await userModel.findOne({ phone: phone })
+
+         let duplicate= "" 
+         if (uniqueEmail) duplicate += "Email,"
+         if (uniquePhone) duplicate+= "Phone "
+         if (uniqueEmail || uniquePhone) {
+            return res.status(400).send({ status: false, message: `${duplicate}is already registered here provide unique` })
+         }
+
          // psswd validation
          if (!passwordRegex.test(password)) {
             return res.status(400).send({ status: false, message: "password length 8 to 15 char, it must contain 1 upperCase, 1 lowerCase, 1 Number, 1 Special Character" })
          }
-         //  checking email or phone number unique or not here 
-         let uniqueEmail = await userModel.findOne({ email: email.toLowerCase() })
-         if (uniqueEmail) {
-            return res.status(400).send({ status: false, message: "Email is already registered here provide unique email" })
-         }
-         let uniquePhone = await userModel.findOne({ phone: phone })
-         if (uniquePhone) {
-            return res.status(400).send({ status: false, message: "Number is already registered here provide unique Number" })
-         }
+         //==============================
          if (address) {
-            if (isValidObject(address)) {
+            if (isValidObject(address) ) {
                const { street, city, pincode } = address
                let empStr = ""
                if (!isValid(street)) empStr += "street, "
