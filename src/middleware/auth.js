@@ -6,7 +6,7 @@ const authenticate = function (req, res, next) {
     try {
         const token = req.headers["x-api-key"]
         if (!token) {
-            res.status(400).send({ status: false, message: "token must be present" })
+           return res.status(400).send({ status: false, message: "token must be present" })
         }
         else {
             jwt.verify(token, "project/booksManagementGroup7", function (err, data) {
