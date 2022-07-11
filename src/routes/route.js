@@ -18,4 +18,5 @@ router.delete("/books/:bookId", auth.authenticate, bookController.deleteBooks)
 
 // -------- Review creation, Updating and Deleting API-------
 router.post("/books/:bookId/review", reviewController.createReview)
+router.delete("/books/:bookId/review/:reviewId", reviewController.deleteBookReview)
 module.exports = router
