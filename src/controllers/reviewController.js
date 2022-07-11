@@ -50,6 +50,7 @@ const createReview = async function (req, res) {
 }
 
 // <<<<<<<<<<<<=======Update review function ==========>>>>>>>>>>//
+
 const updateReview = async function (req, res) {
     try {
         let { bookId, reviewId } = req.params
@@ -91,13 +92,16 @@ const updateReview = async function (req, res) {
                 }
                 let updatedReviewData = await reviewModel.findByIdAndUpdate({ _id: checkReview._id }, reviewData, { new: true }).select({ isDeleted: 0, })
                 return res.status(201).send({ status: false, message: "Success", data: updatedReviewData })
-            } else {
+            }
+            else {
                 return res.status(400).send({ status: false, message: "You can only update review, reviewedBy and rating " });
             }
-        } else {
+        }
+        else {
             return res.status(404).send({ status: false, message: "review not found" })
         }
-    } catch (err) {
+    } 
+    catch (err) {
         res.status(500).send({ status: false, message: err.message })
     }
 }
@@ -128,10 +132,10 @@ const deleteBookReview = async function (req, res) {
         else {
             return res.status(404).send({ status: false, message: "Book not found" });
         }
-    } catch (err) {
+    } 
+    catch (err) {
         res.status(500).send({ status: false, message: err.message })
     }
 }
-
 
 module.exports = { createReview, updateReview, deleteBookReview }

@@ -62,7 +62,8 @@ const createUser = async function (req, res) {
          let savedUser = await userModel.create(userData)
          return res.status(201).send({ status: true, message: "Success", data: savedUser })
       }
-   } catch (err) {
+   } 
+   catch (err) {
       return res.status(500).send({ status: false, message: err.message })
    }
 }
@@ -99,7 +100,8 @@ const loginUser = async function (req, res) {
       res.status(200).setHeader("x-api-key", token);
       return res.status(200).send({ status: true, message: "token will be valid for 24 hrs", data: { token: token } });
 
-   } catch (err) {
+   } 
+   catch (err) {
       return res.status(500).send({ status: false, message: err.message })
    }
 }

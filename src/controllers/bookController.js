@@ -102,10 +102,12 @@ const getBooks = async function (req, res) {
         else {
             return res.status(200).send({ status: true, message: 'Books list', data: returnBooks })
         }
-    } catch (err) {
+    } 
+    catch (err) {
         return res.status(500).send({ status: false, message: err.message })
     }
 }
+
 //<<<<<<<<<<<============= Get Books Details By Book Id ===========>>>>>>>>>>>>
 
 const getBooksById = async function (req, res) {
@@ -122,17 +124,20 @@ const getBooksById = async function (req, res) {
                 else {
                     return res.status(400).send({ status: false, message: "There no book available to show" })
                 }
-            } else {
+            } 
+            else {
                 return res.status(400).send({ status: false, message: "Book Id is invalid " })
             }
         }
         else {
             return res.status(400).send({ status: false, message: "please eneter the bookId" })
         }
-    } catch (err) {
+    } 
+    catch (err) {
         return res.status(500).send({ status: false, message: err.message })
     }
 }
+
 //<<<<<<<<<<<<<<<<<<============================================UPDATE BOOK BY ID========================================>>>>>>>>>>>>>>>>>>>
 
 const updateBookById = async function (req, res) {
@@ -226,13 +231,10 @@ const deleteBooks = async function (req, res) {
         else {
             return res.status(403).send({ status: false, message: "unauthorized to delete" })
         }
-    } catch (err) {
+    } 
+    catch (err) {
         return res.status(500).send({ status: false, message: err.message })
     }
 }
-
-
-
-
 
 module.exports = { createBook, getBooks, updateBookById, deleteBooks, getBooksById }
