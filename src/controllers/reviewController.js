@@ -36,8 +36,8 @@ const createReview = async function (req, res) {
                 }
                 filterReview["reviewedBy"] = reviewedBy
             }
-            let createReview = await (await reviewModel.create(filterReview)).populate("bookId",{__v:0})
             await bookModel.findByIdAndUpdate({ _id: bookId }, { reviews: bookData.reviews + 1 })
+            let createReview = await (await reviewModel.create(filterReview)).populate("bookId",{__v:0})
             return res.status(201).send({ status: true, message: "Success", data: createReview })
         }
         else {

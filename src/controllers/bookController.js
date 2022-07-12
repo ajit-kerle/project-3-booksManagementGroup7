@@ -8,7 +8,7 @@ const validator = require("../validators/validator")
 
 const createBook = async function (req, res) {
     try {
-        let { title, excerpt, userId, ISBN, category, subcategory ,releasedAt} = req.body
+        let { title, excerpt, userId, ISBN, category, subcategory, releasedAt } = req.body
         if (Object.keys(req.body).length == 0) {
             return res.status(400).send({ status: false, message: "Please enter the data to create book" })
         }
@@ -31,8 +31,8 @@ const createBook = async function (req, res) {
                 if (!validator.isValid(excerpt)) {
                     return res.status(400).send({ status: false, message: "Please enter valid excerpt in String" })
                 }
-                if (!validator.isValidISBN(ISBN) && !validator.isValid(ISBN)) {
-                    return res.status(400).send({ status: false, message: "Please enter valid ISBN Number and size should be of 13 e.g: '9781234567890'" })
+                if (!validator.isValidISBN(ISBN)) {
+                    return res.status(400).send({ status: false, message: "Please enter valid ISBN Number and size should be of 13 or 10 e.g: '9781234567890' or '1234567890'" })
                 }
                 ISBN = ISBN.toString()
                 if (ISBN.trim().length == 10) {
@@ -48,7 +48,7 @@ const createBook = async function (req, res) {
                 if (!validator.isValidArray(subcategory)) {
                     return res.status(400).send({ status: false, message: "Please enter valid subcategory in array (string) and no empty string in array e.g:['subcategory1']" })
                 }
-                if (!validator.isValidDate(releasedAt)){
+                if (!validator.isValidDate(releasedAt)) {
                     return res.status(400).send({ status: false, message: "Please Enter valid releasedAt in string and format should be in 'YYYY-MM-DD'" });
                 }
                 const bookData = {
@@ -68,7 +68,7 @@ const createBook = async function (req, res) {
             }
         }
         else {
-            return res.status(400).send({ status: false, message: "Please enter title, excerpt, userId, ISBN, category, subcategory and releasedAt with its value to create book" })
+            return res.status(400).send({ status: false, message: "Please enter title, excerpt, userId, ISBN, category, subcategory and releasedAt with its value, these fields are mandatory to create book" })
         }
     }
     catch (error) {
@@ -102,7 +102,7 @@ const getBooks = async function (req, res) {
         else {
             return res.status(200).send({ status: true, message: 'Books list', data: returnBooks })
         }
-    } 
+    }
     catch (err) {
         return res.status(500).send({ status: false, message: err.message })
     }
@@ -124,7 +124,7 @@ const getBooksById = async function (req, res) {
                 else {
                     return res.status(404).send({ status: false, message: "book not found" })
                 }
-            } 
+            }
             else {
                 return res.status(400).send({ status: false, message: "Book Id is invalid " })
             }
@@ -132,7 +132,7 @@ const getBooksById = async function (req, res) {
         else {
             return res.status(400).send({ status: false, message: "please eneter the bookId" })
         }
-    } 
+    }
     catch (err) {
         return res.status(500).send({ status: false, message: err.message })
     }
@@ -231,7 +231,7 @@ const deleteBooks = async function (req, res) {
         else {
             return res.status(403).send({ status: false, message: "unauthorized to delete" })
         }
-    } 
+    }
     catch (err) {
         return res.status(500).send({ status: false, message: err.message })
     }
