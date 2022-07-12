@@ -36,7 +36,7 @@ const createUser = async function (req, res) {
          if (uniqueEmail) duplicate += "Email,"
          if (uniquePhone) duplicate += "Phone "
          if (uniqueEmail || uniquePhone) {
-            return res.status(400).send({ status: false, message: `${duplicate}is already registered here provide unique` })
+            return res.status(409).send({ status: false, message: `${duplicate}is already registered here provide unique`})
          }
 
          // psswd validation
@@ -85,7 +85,7 @@ const loginUser = async function (req, res) {
       }
       let user = await userModel.findOne({ email: email.toLowerCase(), password: password });
       if (!user) {
-         return res.status(401).send({ status: false, message: " Email or Password wrong" });
+         return res.status(404).send({ status: false, message: " Email or Password wrong" });
       }
       const iat = Date.now()
       const exp = (iat) + (24 * 60 * 60 * 1000)
