@@ -11,7 +11,7 @@ const createReview = async function (req, res) {
         if (!mongoose.Types.ObjectId.isValid(bookId)) {
             return res.status(400).send({ status: false, message: "provide valid bookId in params" })
         }
-        const bookData = await bookModel.findOne({ _id: bookId, isDeleted: false })
+        let bookData = await bookModel.findOne({ _id: bookId, isDeleted: false })
         if (!bookData) {
             return res.status(404).send({ status: false, message: "Book not found" })
         }
@@ -36,7 +36,7 @@ const createReview = async function (req, res) {
                 }
                 filterReview["reviewedBy"] = reviewedBy
             }
-            const createReview = await reviewModel.create(filterReview)
+            let createReview = await (await reviewModel.create(filterReview)).populate("bookId")
             await bookModel.findByIdAndUpdate({ _id: bookId }, { reviews: bookData.reviews + 1 })
             return res.status(201).send({ status: true, message: "Success", data: createReview })
         }
@@ -91,7 +91,7 @@ const updateReview = async function (req, res) {
                     reviewData["reviewedBy"] = reviewedBy
                 }
                 let updatedReviewData = await reviewModel.findByIdAndUpdate({ _id: checkReview._id }, reviewData, { new: true }).select({ isDeleted: 0, })
-                return res.status(201).send({ status: false, message: "Success", data: updatedReviewData })
+                return res.status(200).send({ status: false, message: "Success", data: updatedReviewData })
             }
             else {
                 return res.status(400).send({ status: false, message: "You can only update review, reviewedBy and rating " });

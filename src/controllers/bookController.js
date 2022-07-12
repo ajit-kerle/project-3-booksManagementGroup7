@@ -68,7 +68,7 @@ const createBook = async function (req, res) {
             }
         }
         else {
-            return res.status(400).send({ status: false, message: "Please enter title, excerpt, userId, ISBN, category, subcategory and releasedAt to create book" })
+            return res.status(400).send({ status: false, message: "Please enter title, excerpt, userId, ISBN, category, subcategory and releasedAt with its value to create book" })
         }
     }
     catch (error) {
