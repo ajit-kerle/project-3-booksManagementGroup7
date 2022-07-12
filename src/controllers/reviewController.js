@@ -92,7 +92,7 @@ const updateReview = async function (req, res) {
                     }
                     reviewData["reviewedBy"] = reviewedBy
                 }
-                let updatedReviewData = await reviewModel.findByIdAndUpdate({ _id: checkReview._id }, reviewData, { new: true }).select({ isDeleted: 0, })
+                let updatedReviewData = await reviewModel.findByIdAndUpdate({ _id: checkReview._id }, reviewData, { new: true }).populate('bookId',{isDeleted:0}).select({isDeleted:0})
                 return res.status(201).send({ status: false, message: "Success", data: updatedReviewData })
             }
             else {
