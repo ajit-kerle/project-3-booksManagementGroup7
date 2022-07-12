@@ -62,12 +62,10 @@ const updateReview = async function (req, res) {
             return res.status(400).send({ status: false, message: "please provide valid reviewId" })
         }
         let checkBook = await bookModel.findOne({ _id: bookId, isDeleted: false })
-        // console.log(checkBook,reviewId)
         if (!checkBook) {
             return res.status(404).send({ status: false, message: "Book not found" })
         }
         let checkReview = await reviewModel.findOne({ _id: reviewId, bookId:bookId, isDeleted: false })
-        console.log(checkReview)
         if (checkReview) {
             if (Object.keys(req.body).length === 0) {
                 return res.status(400).send({ status: false, message: "To update any fields write valid key and value" })
@@ -92,8 +90,8 @@ const updateReview = async function (req, res) {
                     }
                     reviewData["reviewedBy"] = reviewedBy
                 }
-                let updatedReviewData = await reviewModel.findByIdAndUpdate({ _id: checkReview._id }, reviewData, { new: true }).populate('bookId',{isDeleted:0}).select({isDeleted:0})
-                return res.status(201).send({ status: false, message: "Success", data: updatedReviewData })
+                let updatedReviewData = await reviewModel.findByIdAndUpdate({ _id: checkReview._id }, reviewData, { new: true }).populate('bookId')
+                return res.status(200).send({ status: true, message: "Success", data: updatedReviewData })
             }
             else {
                 return res.status(400).send({ status: false, message: "You can only update review, reviewedBy and rating " });

@@ -122,7 +122,7 @@ const getBooksById = async function (req, res) {
                     return res.status(200).send({ status: true, message: 'Books list', data: getBookData })
                 }
                 else {
-                    return res.status(400).send({ status: false, message: "There no book available to show" })
+                    return res.status(404).send({ status: false, message: "Book is not found" })
                 }
             } 
             else {
