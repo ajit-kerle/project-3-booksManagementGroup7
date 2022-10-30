@@ -56,6 +56,8 @@
 }
 ```
 
+token :   eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MmQwNDVlZTkzOTczMjdhMTM1ODEyM2YiLCJpYXQiOjE2NTc4MTcxNTAxODUsImV4cCI6MTY1NzkwMzU1MDE4NX0.dwv8UYaMGAMs9wE24M-YAWO-Fg3gro8CWzVnlCxfWZs
+
 ## User APIs 
 ### POST /register
 - Create a user - atleast 5 users

@@ -18,7 +18,7 @@
   },
   "homepage": "https://github.com/Sharmaanand570/project-3-booksManagementGroup7#readme",
   "dependencies": {
-    "aws-sdk": "^2.1174.0",
+    "aws-sdk": "^2.1175.0",
     "body-parser": "^1.20.0",
     "express": "^4.18.1",
     "jsonwebtoken": "^8.5.1",

@@ -28,8 +28,8 @@ const uplodFile = async function (file) {
             if (err) {
                 return reject({ "error": err })
             }
-            console.log(data)
-            console.log("file uploaded succesfully")
+            // console.log(data)
+            // console.log("file uploaded succesfully")
             return resolve(data.Location)
         })
     })
@@ -58,7 +58,7 @@ const createBook = async function (req, res) {
                 }
                 const findTitle = await bookModel.findOne({ title: title.trim().toUpperCase() })
                 if (findTitle) {
-                    return res.status(409).send({ status: false, message: `title ${title.trim()} is already present` })
+                    return res.status(400).send({ status: false, message: `title ${title.trim()} is already present` })
                 }
                 if (!validator.isValid(excerpt)) {
                     return res.status(400).send({ status: false, message: "Please enter valid excerpt in String" })
@@ -83,6 +83,7 @@ const createBook = async function (req, res) {
                 if (!validator.isValidDate(releasedAt)) {
                     return res.status(400).send({ status: false, message: "Please Enter valid releasedAt in string and format should be in 'YYYY-MM-DD'" });
                 }
+                
                 let bookCoverFile = req.files
                 if (bookCoverFile.length == 0) {
                     return res.status(400).send({ status: false, message: "Please Upload the Image" })
@@ -94,6 +95,7 @@ const createBook = async function (req, res) {
                     return res.status(400).send({ status: false, message: "Please upload only image file with extension jpg, png" })
                 }
                 let bookCoverURL = await uplodFile(bookCoverFile[0])
+
                 const bookData = {
                     title: title.trim().toUpperCase(),
                     excerpt: excerpt.trim(),
@@ -190,7 +192,7 @@ const updateBookById = async function (req, res) {
         if (!mongoose.Types.ObjectId.isValid(bookId)) {
             return res.status(400).send("provide valid bookId in params")
         }
-        const bookData = await bookModel.findOne({ _id: bookId, isDeleted: false })
+        const bookData = await bookModel.findOne({ _id: bookId, isDeleted: false})
         if (!bookData) {
             return res.status(404).send({ status: false, message: "book not found" })
         }
@@ -233,7 +235,7 @@ const updateBookById = async function (req, res) {
                     }
                     findISBN = await bookModel.findOne({ ISBN: ISBN.trim() })
                     if (findISBN) {
-                        return res.status(409).send({ status: false, message: "ISBN number is already present" });
+                        return res.status(400).send({ status: false, message: "ISBN number is already present" });
                     }
                     filterBook["ISBN"] = ISBN.trim()
                 }

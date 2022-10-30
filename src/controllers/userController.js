@@ -36,7 +36,7 @@ const createUser = async function (req, res) {
          if (uniqueEmail) duplicate += "Email,"
          if (uniquePhone) duplicate += "Phone "
          if (uniqueEmail || uniquePhone) {
-            return res.status(409).send({ status: false, message: `${duplicate}is already registered here provide unique`})
+            return res.status(400).send({ status: false, message: `${duplicate}is already registered here provide unique`})
          }
 
          // psswd validation
